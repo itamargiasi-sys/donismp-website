@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DoniSMP - Ultimate Survival Multiplayer</title>
+
+  <!-- Google Fonts & Font Awesome Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    /* RESET & VARIABLES */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-dark: #070a12;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(21, 32, 57, 0.85);
+      --border-color: rgba(56, 189, 248, 0.18);
+      --primary: #00d2ff;
+      --primary-hover: #00b4db;
+      --accent-gold: #fbbf24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 210, 255, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(251, 191, 36, 0.06) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    /* NAVIGATION */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(7, 10, 18, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.85rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text-main);
+      font-family: var(--font-heading);
+      font-weight: 800;
+      font-size: 1.35rem;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 8px rgba(0, 210, 255, 0.5));
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--primary);
+    }
+
+    .nav-btn {
+      background: rgba(0, 210, 255, 0.1);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      padding: 0.5rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-btn:hover {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    }
+
+    /* HERO SECTION */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 7rem 1.5rem 4rem;
+      position: relative;
+    }
+
+    .server-logo {
+      width: 170px;
+      height: 170px;
+      margin-bottom: 1.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 30px rgba(0, 210, 255, 0.5));
+      animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .live-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-color);
+      padding: 0.45rem 1.25rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+
+    .status-dot.offline {
+      background: #ef4444;
+      box-shadow: 0 0 10px #ef4444;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: 3.8rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 1.2rem;
+      max-width: 620px;
+      margin-bottom: 2rem;
+    }
+
+    .ip-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.8rem 1.4rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .ip-text {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    .copy-btn {
+      background: var(--primary);
+      color: #000;
+      border: none;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+    }
+
+    /* CONTAINER & SECTIONS */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-family: var(--font-heading);
+      font-size: 2.2rem;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title p {
+      color: var(--text-muted);
+    }
+
+    /* FEATURES GRID */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 2rem;
+      border-radius: 16px;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--primary);
+      transform: translateY(-5px);
+    }
+
+    .feature-icon {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* RULES ACCORDION */
+    .rules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .rule-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .rule-header {
+      padding: 1.2rem 1.5rem;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .rule-body {
+      padding: 0 1.5rem 1.2rem;
+      color: var(--text-muted);
+      display: none;
+    }
+
+    .rule-item.active .rule-body {
+      display: block;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border-color);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.4));
+    }
+
+    /* TOAST NOTIFICATION */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary);
+      color: #000;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 2000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a href="#" class="nav-brand">
+      <img src="logo.png" alt="DoniSMP Logo" class="nav-logo" onerror="this.style.display='none';">
+      <span>DoniSMP</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#features">Features</a></li>
+      <li><a href="#rules">Rules</a></li>
+      <li><a href="https://discord.gg/fmXNUZfSQ" target="_blank">Discord</a></li>
+    </ul>
+    <a href="https://discord.gg/fmXNUZfSQ" target="_blank" class="nav-btn">
+      <i class="fa-brands fa-discord"></i> Join Discord
+    </a>
+  </nav>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <img src="logo.png" alt="DoniSMP Logo" class="server-logo" onerror="this.style.display='none';">
+    
+    <div class="live-status">
+      <span class="status-dot" id="status-indicator"></span>
+      <span id="player-count">FETCHING STATUS...</span>
+    </div>
+
+    <h1>Welcome to DoniSMP</h1>
+    <p>The ultimate Survival Multiplayer experience. Built with land protection, custom player shops, smart mob spawners, and proximity voice chat.</p>
+
+    <div class="ip-box">
+      <i class="fa-solid fa-server" style="color: var(--primary);"></i>
+      <span class="ip-text" id="server-ip">srv2.serv-mc.fr:25511</span>
+      <button class="copy-btn" onclick="copyIP()">
+        <i class="fa-regular fa-copy"></i> Copy IP
+      </button>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section class="container" id="features">
+    <div class="section-title">
+      <h2>Server Features</h2>
+      <p>Discover what makes playing on DoniSMP unique</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fa-solid fa-shield-halved feature-icon"></i>
+        <h3>Land Protection</h3>
+        <p>Keep your builds and chests completely safe using GriefPrevention land claims.</p>
+      </div>
+
+      <div class="feature-card">
+        <i class="fa-solid fa-microphone feature-icon"></i>
+        <h3>Proximity Voice Chat</h3>
+        <p>Talk directly with nearby players in-game for an immersive multiplayer experience.</p>
+      </div>
+
+      <div class="feature-card">
+        <i class="fa-solid fa-coins feature-icon"></i>
+        <h3>Player Economy</h3>
+        <p>Buy, sell, and trade items with other players using EconomyShopGUI and custom player orders.</p>
+      </div>
+
+      <div class="feature-card">
+        <i class="fa-solid fa-box-open feature-icon"></i>
+        <h3>Phoenix Crates</h3>
+        <p>Earn crate keys through events and gameplay to unlock rare cosmetics and rewards.</p>
+      </div>
+
+      <div class="feature-card">
+        <i class="fa-solid fa-dna feature-icon"></i>
+        <h3>Smart Spawners</h3>
+        <p>Upgrade mob spawners to build efficient, high-yield mob farms across your land.</p>
+      </div>
+
+      <div class="feature-card">
+        <i class="fa-solid fa-user-ninja feature-icon"></i>
+        <h3>Custom NPCs & Dialogs</h3>
+        <p>Interact with interactive quest-givers and custom NPCs built into spawn hubs.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RULES SECTION -->
+  <section class="container" id="rules">
+    <div class="section-title">
+      <h2>Server Rules</h2>
+      <p>Please follow these guidelines to keep our community fun and safe</p>
+    </div>
+
+    <div class="rules-list">
+      <div class="rule-item" onclick="toggleRule(this)">
+        <div class="rule-header">
+          <span>1. Be Respectful & Fair</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="rule-body">
+          Hate speech, toxicity, excessive swearing, and harassment will not be tolerated in chat or voice chat.
+        </div>
+      </div>
+
+      <div class="rule-item" onclick="toggleRule(this)">
+        <div class="rule-header">
+          <span>2. No Cheating or Exploiting</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="rule-body">
+          Hacks, x-ray packs, or abusing game bugs are strictly prohibited. GrimAC is active to detect unauthorized clients.
+        </div>
+      </div>
+
+      <div class="rule-item" onclick="toggleRule(this)">
+        <div class="rule-header">
+          <span>3. Respect Unclaimed Builds</span>
+          <i class="fa-solid fa-chevron-down"></i>
+        </div>
+        <div class="rule-body">
+          Griefing or stealing near claimed areas or spawn regions is forbidden. Always claim your land!
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <img src="logo.png" alt="DoniSMP Logo" class="footer-logo" onerror="this.style.display='none';">
+    <p>&copy; 2026 DoniSMP. All rights reserved. Not affiliated with Mojang or Microsoft.</p>
+  </footer>
+
+  <!-- TOAST NOTIFICATION -->
+  <div class="toast" id="toast">IP copied to clipboard!</div>
+
+  <!-- JAVASCRIPT -->
+  <script>
+    // Copy IP Function
+    function copyIP() {
+      const ip = document.getElementById('server-ip').innerText;
+      navigator.clipboard.writeText(ip);
+      
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Toggle Rules Accordion
+    function toggleRule(element) {
+      element.classList.toggle('active');
+    }
+
+    // Fetch Live Server Status (mcstatus.io API)
+    async function fetchServerStatus() {
+      const serverIp = "srv2.serv-mc.fr:25511";
+      const statusText = document.getElementById("player-count");
+      const statusDot = document.getElementById("status-indicator");
+
+      try {
+        const response = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIp}`);
+        const data = await response.json();
+
+        if (data && data.online) {
+          statusText.textContent = `${data.players.online} / ${data.players.max} PLAYERS ONLINE`;
+          statusDot.className = "status-dot";
+        } else {
+          statusText.textContent = "SERVER OFFLINE";
+          statusDot.className = "status-dot offline";
+        }
+      } catch (err) {
+        statusText.textContent = "ONLINE";
+        statusDot.className = "status-dot";
+      }
+    }
+
+    // Fetch status on load & refresh every 30s
+    fetchServerStatus();
+    setInterval(fetchServerStatus, 30000);
+  </script>
+</body>
+</html>
